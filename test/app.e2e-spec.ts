@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
@@ -15,10 +15,12 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
+  it('/ (GET)', async done => {
+    const server = request(app.getHttpServer());
+    await server
       .get('/')
       .expect(200)
       .expect('Hello World!');
+    done();
   });
 });
