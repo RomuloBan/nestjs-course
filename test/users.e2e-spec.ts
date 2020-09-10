@@ -1,9 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeORMExceptionFilter } from 'src/filters/typeorm-exceptions.filter';
 import { UserDTO } from 'src/users/user.dto';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { TypeORMExceptionFilter } from '../src/filters/typeorm-exceptions.filter';
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
