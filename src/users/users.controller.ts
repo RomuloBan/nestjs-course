@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Put,
+  UsePipes,
 } from '@nestjs/common';
+import { ValIdIdPipe } from 'src/pipes/validId.pipe';
 import { UserDTO } from './user.dto';
 import { UsersService } from './users.service';
 
@@ -30,6 +32,7 @@ export class UsersController {
   }
 
   @Put(':id')
+  @UsePipes(ValIdIdPipe)
   async updateUser(
     @Param('id') id: string,
     @Body() user: UserDTO,
@@ -38,6 +41,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UsePipes(ValIdIdPipe)
   async deleteUser(@Param('id') id: string): Promise<void> {
     return await this.usersService.deleteUser(id);
   }

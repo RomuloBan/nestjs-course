@@ -8,7 +8,12 @@ export class UserEntity {
   @Column({
     unique: true,
   })
-  readonly name: string;
+  name: string;
+
+  @Column({
+    nullable: true,
+  })
+  readonly lastName: string;
 
   constructor(userId: string, name: string) {
     this.userId = userId;
