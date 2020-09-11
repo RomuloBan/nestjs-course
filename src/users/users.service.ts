@@ -21,13 +21,23 @@ export class UsersService {
     return this.mapper.entityToDto(user);
   }
 
+  async getUserByName(name: string): Promise<UserEntity> {
+    return await this.usersRepository.getUserByName(name);
+  }
+
   async newUser(userDTO: UserDTO): Promise<UserDTO> {
     const newUser: UserEntity = await this.usersRepository.newUser(userDTO);
     return this.mapper.entityToDto(newUser);
   }
 
   async updateUser(id: string, userDTO: UserDTO): Promise<UserDTO> {
-    const updateUser = await this.usersRepository.updateUser(id, userDTO);
+    const newUser = new UserDTO(
+      id,
+      userDTO.name,
+      userDTO.lastName,
+      userDTO.password,
+    );
+    const updateUser = await this.usersRepository.updateUser(id, newUser);
     return this.mapper.entityToDto(updateUser);
   }
 

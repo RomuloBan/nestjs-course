@@ -6,9 +6,13 @@ import {
   Param,
   Post,
   Put,
-  UsePipes,
+  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
-import { ValIdIdPipe } from 'src/pipes/validId.pipe';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Auth } from '../auth/auth.decorator';
+import { ValIdIdPipe } from '../pipes/validId.pipe';
 import { UserDTO } from './user.dto';
 import { UsersService } from './users.service';
 
@@ -21,8 +25,10 @@ export class UsersController {
     return await this.usersService.getAllUsers();
   }
 
-  @Get(':id')
-  async getUserById(@Param('id') id: string): Promise<UserDTO> {
+  @Get('/me')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  async getUserById(@Auth() { id }: UserDTO): Promise<UserDTO> {
     return await this.usersService.getUserById(id);
   }
 
@@ -32,17 +38,26 @@ export class UsersController {
   }
 
   @Put(':id')
-  @UsePipes(ValIdIdPipe)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   async updateUser(
-    @Param('id') id: string,
+    @Param('id', ValIdIdPipe) id: string,
     @Body() user: UserDTO,
   ): Promise<UserDTO> {
     return await this.usersService.updateUser(id, user);
   }
 
   @Delete(':id')
-  @UsePipes(ValIdIdPipe)
-  async deleteUser(@Param('id') id: string): Promise<void> {
-    return await this.usersService.deleteUser(id);
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  async deleteUser(
+    @Param('id', ValIdIdPipe) userId: string,
+    @Auth() { id }: UserDTO,
+  ): Promise<void> {
+    if (id === userId) {
+      return await this.usersService.deleteUser(id);
+    } else {
+      throw new UnauthorizedException('No estás autorizado');
+    }
   }
 }

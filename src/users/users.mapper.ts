@@ -5,10 +5,20 @@ import { UserEntity } from './users.entity';
 @Injectable()
 export class UserMapper {
   dtoToEntity(userDTO: UserDTO): UserEntity {
-    return new UserEntity(userDTO.id, userDTO.name);
+    return new UserEntity(
+      userDTO.id,
+      userDTO.name,
+      userDTO.lastName,
+      userDTO.password,
+    );
   }
 
   entityToDto(userEntity: UserEntity): UserDTO {
-    return new UserDTO(userEntity.userId, userEntity.name);
+    return new UserDTO(
+      userEntity.userId,
+      userEntity.name,
+      userEntity.lastName,
+      userEntity.password,
+    );
   }
 }
